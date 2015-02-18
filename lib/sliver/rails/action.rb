@@ -45,16 +45,17 @@ class Sliver::Rails::Action
     environment['CONTENT_TYPE']
   end
 
+  def json_request?
+    content_type == 'application/json'
+  end
+
   def params
     ActionController::Parameters.new request_params
   end
 
   def request_params
-    if content_type == 'application/json'
-      JSON.parse response.body.read
-    else
+    @request_params ||= json_request? ? JSON.parse(request.body.read) :
       request.params
-    end
   end
 
   def set_response(status, body = nil)
