@@ -1,6 +1,8 @@
 class Sliver::Rails::Action
   include Sliver::Action
 
+  BODIED_METHODS = %w( post put patch )
+
   def self.expose(name, options = {}, &block)
     define_method "#{name}_without_caching", &block
     define_method(name) do
@@ -39,6 +41,10 @@ class Sliver::Rails::Action
 
   private
 
+  def bodied_request?
+    BODIED_METHODS.include? environment['REQUEST_METHOD'].downcase
+  end
+
   def content_type_header
     environment['Content-Type']      ||
     environment['HTTP_CONTENT_TYPE'] ||
@@ -58,8 +64,11 @@ class Sliver::Rails::Action
   end
 
   def request_params
-    @request_params ||= json_request? ? JSON.parse(request.body.read) :
+    @request_params ||= if bodied_request? && json_request?
+      JSON.parse(request.body.read)
+    else
       request.params
+    end
   end
 
   def set_response(status, body = nil)
