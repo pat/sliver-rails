@@ -39,14 +39,18 @@ class Sliver::Rails::Action
 
   private
 
-  def content_type
+  def content_type_header
     environment['Content-Type']      ||
     environment['HTTP_CONTENT_TYPE'] ||
     environment['CONTENT_TYPE']
   end
 
+  def content_types
+    content_type_header.split(/;\s?/)
+  end
+
   def json_request?
-    content_type == 'application/json'
+    content_types.include? 'application/json'
   end
 
   def params
