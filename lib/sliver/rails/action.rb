@@ -4,16 +4,24 @@ class Sliver::Rails::Action
   BODIED_METHODS = %w( post put patch )
 
   def self.expose(name, options = {}, &block)
-    define_method "#{name}_without_caching", &block
-    define_method(name) do
-      @exposed_methods ||= {}
-      @exposed_methods[name] ||= send "#{name}_without_caching"
-    end
-
-    private "#{name}_without_caching" unless options[:public]
-    private name                      unless options[:public]
+    add_exposed_methods name, options, &block if block_given?
 
     locals << name
+  end
+
+  def self.add_exposed_methods(name, options = {}, &block)
+    uncached_name = "#{name}_without_caching"
+
+    define_method uncached_name, &block
+    define_method(name) do
+      @exposed_methods ||= {}
+      @exposed_methods[name] ||= send uncached_name
+    end
+
+    return if options[:public]
+
+    private uncached_name
+    private name
   end
 
   def self.locals
