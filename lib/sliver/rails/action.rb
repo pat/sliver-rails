@@ -3,6 +3,16 @@ class Sliver::Rails::Action
 
   BODIED_METHODS = %w( post put patch )
 
+  def self.call(environment)
+    request = ::Rack::Request.new environment
+    Rails.logger.info "Processing by #{name}"
+    if request.params.any?
+      Rails.logger.info "  Parameters: #{request.params.inspect}"
+    end
+
+    super
+  end
+
   def self.expose(name, options = {}, &block)
     add_exposed_methods name, options, &block if block_given?
 
