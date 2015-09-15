@@ -7,7 +7,7 @@ Rails-focused extensions to the [Sliver](https://github.com/pat/sliver) API liba
 Add the gem to your Gemfile:
 
 ```ruby
-gem 'sliver-rails', '0.1.1'
+gem 'sliver-rails', '~> 0.2.0'
 ```
 
 ## Usage
