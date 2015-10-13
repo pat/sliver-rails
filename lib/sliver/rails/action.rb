@@ -78,7 +78,7 @@ class Sliver::Rails::Action
   end
 
   def params
-    ActionController::Parameters.new request_params
+    @params ||= ActionController::Parameters.new request_params
   end
 
   def request_params
