@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class Sliver::Rails::Action
   include Sliver::Action
 
-  BODIED_METHODS = %w( post put patch )
+  BODIED_METHODS = %w[ post put patch ].freeze
 
   def self.call(environment)
     request = ::Rack::Request.new environment
@@ -60,13 +62,13 @@ class Sliver::Rails::Action
   private
 
   def bodied_request?
-    BODIED_METHODS.include? environment['REQUEST_METHOD'].downcase
+    BODIED_METHODS.include? environment["REQUEST_METHOD"].downcase
   end
 
   def content_type_header
-    environment['Content-Type']      ||
-    environment['HTTP_CONTENT_TYPE'] ||
-    environment['CONTENT_TYPE']
+    environment["Content-Type"]        ||
+      environment["HTTP_CONTENT_TYPE"] ||
+      environment["CONTENT_TYPE"]
   end
 
   def content_types
@@ -74,19 +76,23 @@ class Sliver::Rails::Action
   end
 
   def json_request?
-    content_types.include? 'application/json'
+    content_types.include? "application/json"
   end
 
   def params
     @params ||= ActionController::Parameters.new request_params
   end
 
-  def request_params
-    @request_params ||= if bodied_request? && json_request?
+  def parsed_params
+    if bodied_request? && json_request?
       JSON.parse(request.body.read)
     else
       request.params
     end
+  end
+
+  def request_params
+    @request_params ||= parsed_params
   end
 
   def set_response(status, body = nil)

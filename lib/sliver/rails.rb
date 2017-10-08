@@ -1,5 +1,7 @@
-require 'sliver'
-require 'rails'
+# frozen_string_literal: true
+
+require "sliver"
+require "rails"
 
 module Sliver::Rails
   module Processors; end
@@ -13,7 +15,7 @@ module Sliver::Rails
   end
 
   def self.view_paths
-    @view_paths || Rails.root.join('app/views').to_s
+    @view_paths || Rails.root.join("app/views").to_s
   end
 
   def self.view_paths=(paths)
@@ -21,8 +23,8 @@ module Sliver::Rails
   end
 end
 
-require 'sliver/rails/action'
-require 'sliver/rails/jbuilder_renderer'
-require 'sliver/rails/jbuilder_template'
-require 'sliver/rails/pagination'
-require 'sliver/rails/processors/json_processor'
+require "sliver/rails/action"
+require "sliver/rails/jbuilder_renderer"
+require "sliver/rails/jbuilder_template"
+require "sliver/rails/pagination"
+require "sliver/rails/processors/json_processor"

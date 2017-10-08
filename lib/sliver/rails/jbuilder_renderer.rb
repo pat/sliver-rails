@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 class Sliver::Rails::JBuilderRenderer
   def self.call(template, locals = {})
     new(template, locals).call
   end
 
   def initialize(template, locals = {})
-    @template, @locals = template, locals
+    @template = template
+    @locals   = locals
   end
 
   def call
@@ -16,7 +19,7 @@ class Sliver::Rails::JBuilderRenderer
   attr_reader :template, :locals
 
   def engine
-    Tilt.new template_path, nil, view_path: views_path
+    Tilt.new template_path, nil, :view_path => views_path
   end
 
   def template_path
